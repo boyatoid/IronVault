@@ -62,7 +62,7 @@ public class authService {
     	return Base64.getEncoder().encodeToString(hash);
     }
     
-    private static SecretKey deriveKey(char[] password, byte[] salt) throws Exception { // used to create the KeK for encrypting the mater password
+    public static SecretKey deriveKey(char[] password, byte[] salt) throws Exception { // used to create the KeK for encrypting the mater password
     	SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     	KeySpec spec = new PBEKeySpec(password, salt, PBKDF2_ITERATIONS, KEY_LENGTH);
     	return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
@@ -92,7 +92,7 @@ public class authService {
     	return Base64.getEncoder().encodeToString(combined);
     }
     
-    private static SecretKey unwrapKey(String wrappedKey, SecretKey kek) throws Exception { // used to decrypt (unwrap) the key used for password encryption
+    public static SecretKey unwrapKey(String wrappedKey, SecretKey kek) throws Exception { // used to decrypt (unwrap) the key used for password encryption
     	byte[] combined = Base64.getDecoder().decode(wrappedKey);
     	byte[] iv = new byte[iv_length];
     	byte[] wrapped = new byte[combined.length - iv_length];
@@ -137,7 +137,7 @@ public class authService {
     	byte[] encryptedPass = cipher.doFinal(password.getBytes("UTF-8"));
     	
     	byte[] combined = new byte[iv_length + encryptedPass.length];
-    	System.arraycopy(iv, 0, combined, iv_length, encryptedPass.length);
+    	System.arraycopy(iv, 0, combined, 0, iv.length);
     	System.arraycopy(encryptedPass, 0, combined, iv.length, encryptedPass.length);
     	
     	return Base64.getEncoder().encodeToString(combined);

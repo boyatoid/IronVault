@@ -21,7 +21,7 @@ import java.util.Base64;
 import javax.swing.JOptionPane;
 
 public class Sprint2Database {
-	static final String DATABASE_URL = "jdbc:ucanaccess:///Users/thepwn3r/Desktop/IronVault/Sprint2Prototype.accdb";
+	static final String DATABASE_URL = "jdbc:ucanaccess:///Users/thepwn3r/Desktop/IronVault/Sprint2Prototype2.accdb"; // db2.accdb is the db with new user password storage tables
 	Connection connection = null;
 	Statement statement = null;
 	ResultSet resultSet = null;
@@ -147,7 +147,7 @@ public class Sprint2Database {
 		}
 	}
 	
-	public int addSiteAccount(int userId, String siteName, String siteUser, String sitePass) {
+	public int addSiteAccount(int userId, String siteName, String siteUser, String sitePass) {//adds credentials for table 2
 	    int result = 0;
 
 	    try {
@@ -173,7 +173,7 @@ public class Sprint2Database {
 	    return result;
 	} // end of addSiteAccount
 	
-	public int updateSiteAccount(int ID, int userId, String siteName, String siteUser, String sitePass) {
+	public int updateSiteAccount(int ID, int userId, String siteName, String siteUser, String sitePass) { //updates credentials for table 2
 	    int result = 0;
 
 	    try {
@@ -199,6 +199,7 @@ public class Sprint2Database {
 
 	    return result;
 	} //end of updateSiteAccount
+
 	
 	
 	public void clear_resources() {
