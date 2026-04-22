@@ -82,7 +82,9 @@ public class GUIserver {
 			try {
 				authService.UserRecord record = db.loadUser(username);
 				vaultKey = authService.login(password, record);
-				// authService.clearPassword(); -> not implemented yet, method would clear password from memory after use
+				System.out.println("[?] GUI Server {debug}: Authenticated User, wrapped vault key: " + record.wrappedVaultKey);
+				System.out.println("[?] GUI Server {debug}: User password hash (Base64 encoded): " + record.authHash);
+				password = authService.clearPassword(password);
 				frame.dispose();
 				showVaultWindow(username);
 			} catch (Exception x) { // exception is x because ActionListener is e 
@@ -99,7 +101,8 @@ public class GUIserver {
 				if (db.DoesUserExist(username)) {statusLabel.setForeground(Color.red); 
 												 statusLabel.setText("User already exists"); return;}
 				authService.UserRecord record = authService.register(password);
-				// should add method to clear pass from memory --> authService.clearPassword();
+				password = authService.clearPassword(password);
+				
 				db.addUser(username, record);
 				statusLabel.setForeground(Color.GREEN);
 				statusLabel.setText("Registered successfully! Please login!");
@@ -114,12 +117,37 @@ public class GUIserver {
 	}
 	
 	// main UI logic, this still has yet to be fully implemented
+	// logout button is currently broken but only visually 
 	private void showVaultWindow(String username) {
 		JFrame frame = new JFrame("IronVault Manager - " + username);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(600, 400);
 		frame.add(new JLabel("Welcome, " + username + "!", SwingConstants.CENTER));
 		frame.setVisible(true);
+		
+		JPanel panel = new JPanel(new GridBagLayout()); 
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 10, 5, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		
+		gbc.gridx = 0; gbc.gridy = 0;
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		JButton logOutButton = new JButton("Logout");
+		buttonPanel.add(logOutButton);
+		panel.add(buttonPanel, gbc);
+		
+		// on logout, clear vaultKey and push back to login screen
+		logOutButton.addActionListener(e -> {
+			System.out.println("[?] GUI Server: Vault Key set null, returning to login..");
+			vaultKey = null;
+			frame.dispose();
+			showLoginWindow();
+		});
+		
+		frame.getRootPane().setDefaultButton(logOutButton);
+		frame.add(panel);
+		frame.setVisible(true);
+		
 	}
 	
 }

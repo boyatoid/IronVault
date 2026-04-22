@@ -29,14 +29,14 @@ public class Sprint2Database {
 	
 	public Sprint2Database() {
 		try {
-			System.out.println("Starting Database Connection");
+			System.out.println("[!] Database conn: Starting Database Connection");
 			connection = DriverManager.getConnection(DATABASE_URL);
-			System.out.println("Create Statement");
+			System.out.println("[!] Database conn: Create Statement");
 			statement = connection.createStatement();
 			String strSQL = "Select ID, UserName, Password, AuthSalt, AuthHash, KeySalt, WrappedKey from PLocker";
 			System.out.println(strSQL);
 			resultSet = statement.executeQuery(strSQL);
-			System.out.println("resultSet returned");
+			System.out.println("[!] Database conn: resultSet returned");
 			//Show the Data
 			while(resultSet.next()) {
 	//			JOptionPane.showMessageDialog(null, resultSet.getString(1));
@@ -147,12 +147,66 @@ public class Sprint2Database {
 		}
 	}
 	
+	public int addSiteAccount(int userId, String siteName, String siteUser, String sitePass) {
+	    int result = 0;
+
+	    try {
+	        PreparedStatement insertSite = connection.prepareStatement("Insert into theVault (UserID, SiteName, SiteUser, SitePass) VALUES (?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
+
+	        insertSite.setInt(1, userId);
+	        insertSite.setString(2, siteName);
+	        insertSite.setString(3, siteUser);
+	        insertSite.setString(4, sitePass);
+
+	        result = insertSite.executeUpdate();
+
+	        if (result == 1) {
+	            JOptionPane.showMessageDialog(null, "Site Account Added Successfully", siteName, JOptionPane.INFORMATION_MESSAGE);
+	        } else {
+	            JOptionPane.showMessageDialog(null, "Insert Failed", siteName, JOptionPane.ERROR_MESSAGE);
+	        }
+
+	    } catch (SQLException e) {
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "Insert Failed", JOptionPane.ERROR_MESSAGE);
+	    }
+
+	    return result;
+	} // end of addSiteAccount
+	
+	public int updateSiteAccount(int ID, int userId, String siteName, String siteUser, String sitePass) {
+	    int result = 0;
+
+	    try {
+	        PreparedStatement updateSite = connection.prepareStatement("Update theVault SET UserID = ?, SiteName = ?, SiteUser = ?, SitePass = ? WHERE ID = ?");
+
+	        updateSite.setInt(1, userId);
+	        updateSite.setString(2, siteName);
+	        updateSite.setString(3, siteUser);
+	        updateSite.setString(4, sitePass);
+	        updateSite.setInt(5, ID);
+
+	        result = updateSite.executeUpdate();
+
+	        if (result == 1) {
+	            JOptionPane.showMessageDialog(null, "Site Account Updated Successfully", siteName, JOptionPane.INFORMATION_MESSAGE);
+	        } else {
+	            JOptionPane.showMessageDialog(null, "Update Failed", siteName, JOptionPane.ERROR_MESSAGE);
+	        }
+
+	    } catch (SQLException e) {
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "Update Failed", JOptionPane.ERROR_MESSAGE);
+	    }
+
+	    return result;
+	} //end of updateSiteAccount
+	
+	
 	public void clear_resources() {
 		try {
-			System.out.println("Clearing resources...");
+			System.out.println("[!] Database conn: Clearing resources...");
 			if (statement != null) {statement.close();}
 			if (connection != null) {connection.close();}
-			System.out.println("Resources cleared..!");
+			System.out.println("[!] Database conn: Resources cleared..!");
 		} catch (Exception sqlex) {
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database error in clear_resources method", JOptionPane.ERROR_MESSAGE);
 		}

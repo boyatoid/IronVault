@@ -34,7 +34,7 @@ public class ironVaultMain {
 		System.out.println(newRecord.authHash);
 		System.out.println(newRecord.authSalt);
 //=========================================================================
-
+		
 //=========View and controller testing logic========
 		Password pass = new Password(); 
 		advice view = new advice();
