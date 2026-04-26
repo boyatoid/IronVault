@@ -106,6 +106,7 @@ public class authService {
     // register a new user
     public static UserRecord register(char[] masterPassword) throws Exception {
     	System.out.println("[!] Auth Service: Registering User...");
+    	// commented out for testing // if (!PasswordValidator.isValidPassword(masterPassword.toString())) { PasswordValidator.promptForValidPassword(); } 
     	byte[] authSalt = genSalt();
     	String authHash = deriveAuthHash(masterPassword, authSalt);
     	SecretKey vaultKey = generateVaultKey();

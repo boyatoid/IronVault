@@ -199,8 +199,29 @@ public class Sprint2Database {
 
 	    return result;
 	} //end of updateSiteAccount
-
 	
+	public ResultSet getVaultEntries(int userId) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT ID, SiteName, SiteUser, SitePass FROM theVault WHERE UserID = ?");
+			stmt.setInt(1, userId);
+			return stmt.executeQuery();
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Failed to grab entries", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+	}
+	
+	public int getUserID(String uname) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT ID FROM PLocker WHERE UserName = ?");
+			stmt.setString(1, uname);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) return rs.getInt("ID");
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Failed to grab userID", JOptionPane.ERROR_MESSAGE);
+		}
+		return -1;
+	}
 	
 	public void clear_resources() {
 		try {

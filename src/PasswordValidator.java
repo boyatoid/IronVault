@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class PasswordValidator {
 	
 	    
-	    private static boolean isValidPassword(String password) { //Tests input to see if it is valid for test
+	    public static boolean isValidPassword(String password) { //Tests input to see if it is valid for test
 	        
 	    	if (password.length() < 12) {
 	            return false;
