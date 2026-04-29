@@ -11,6 +11,7 @@
 *
 *********************************************************/
 import java.util.Scanner;
+import javax.swing.*;
 
 public class PasswordValidator {
 	
@@ -46,18 +47,17 @@ public class PasswordValidator {
 
 	        return hasUppercase && hasNumber && hasSymbol; 
 	    }
-	    public static void promptForValidPassword() { 	//Called in main
-	        Scanner scanner = new Scanner(System.in);   //Takes input from user
+	    public static char[] promptForValidPassword() { 	//Called in main
+	        //Takes input from user
 	        String password;
 
 	        while (true) {								//If the password is valid
-	            System.out.print("Enter a password: ");
-	            password = scanner.nextLine();
+	            password = JOptionPane.showInputDialog("Please input a password that matches the requirements\nPasswords must have:\nAt least 12 characters\nAt least one uppercase letter\nAt least one number\nAt least one symbol");
+	            
 
 	            if (isValidPassword(password)) { 		//calls isValidPassword function to test the input
-	                System.out.println("Password is valid!");
-	                break;
-	            } 
+	                JOptionPane.showMessageDialog(null, "Password is valid, please input at login screen!");
+	                return password.toCharArray();	            } 
 	            else {								
 	                System.out.println("Invalid password. Requirements:");
 	                System.out.println("- At least 12 characters");
@@ -67,7 +67,5 @@ public class PasswordValidator {
 	                System.out.println();
 	            }
 	        }
-
-	        scanner.close();
 	    }
 	}
